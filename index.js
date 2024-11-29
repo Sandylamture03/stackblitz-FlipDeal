@@ -7,8 +7,8 @@ const port = 3000;
 
 app.use(express.static('static'));
 
-let taxRate = 0.05; // 5%
-let discountedPercentage = 0.1; // 10%
+let taxRate = 5; // 5%
+let discountedPercentage = 10; // 10%
 let loyaltyRate = 2; // 2 points per $1
 // Calculate the total price of items in the cart
 /*  Declare an endpoint cart-total using the get keyword.
@@ -47,7 +47,7 @@ If the Membership status = true, then the discount percentage is applied
 
 If the Membership status = false, no discount is applied
 
-API Call: <http://localhost:3000/membership-discount?cartTotal=3600&isMember=true>
+API Call: <http://localhost:3000e/membership-discount?cartTotal=3600&isMember=true>
 
 Expected Output: 3240  */
 
@@ -56,7 +56,7 @@ app.get('/membership-discount', (req, res) => {
   let isMember = req.query.isMember === 'true';
   let finalPrice;
   if (isMember) {
-    finalPrice = cartTotal * (1 - discountedPercentage);
+    finalPrice = cartTotal - (cartTotal * discountedPercentage) / 100; //cartTotal * (1 - discountedPercentage);
   } else {
     finalPrice = cartTotal;
   }
@@ -82,7 +82,7 @@ Expected Output: 180 */
 
 app.get('/calculate-tax', (req, res) => {
   let cartTotal = parseFloat(req.query.cartTotal);
-  let taxAmount = cartTotal * taxRate;
+  let taxAmount = (cartTotal * taxRate) / 100;
   res.send(taxAmount.toString());
 });
 
